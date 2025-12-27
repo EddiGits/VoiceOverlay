@@ -1,5 +1,10 @@
 build/
 *.apk
+*.apk.idsig
+*.dex
 .gradle/
 local.properties
 *.log
+node_modules/
+firebase-function/.firebase/
+firebase-function/functions/node_modules/

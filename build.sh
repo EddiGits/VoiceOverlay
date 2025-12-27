@@ -31,7 +31,10 @@ $JAVA_HOME/bin/javac --release=8 \
   src/com/voiceoverlay/MainActivity.java \
   src/com/voiceoverlay/OverlayService.java \
   src/com/voiceoverlay/WhisperAPI.java \
+  src/com/voiceoverlay/FirebaseWhisperAPI.java \
   src/com/voiceoverlay/AudioRecorder.java \
+  src/com/voiceoverlay/ChatGPTAPI.java \
+  src/com/voiceoverlay/BootReceiver.java \
   build/com/voiceoverlay/R.java
 
 # Step 4: Convert to DEX

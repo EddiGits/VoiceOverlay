@@ -20,6 +20,8 @@ public class WhisperAPI {
     private static final String PREFS_NAME = "VoiceOverlayPrefs";
     private static final String KEY_API_URL = "whisper_api_url";
     private static final String KEY_API_KEY = "whisper_api_key";
+    private static final String KEY_TRANSCRIPTION_PROMPT = "transcription_prompt";
+    private static final String KEY_WHISPER_MODEL = "whisper_model";
 
     public interface TranscriptionCallback {
         void onSuccess(String transcription);
@@ -40,9 +42,12 @@ public class WhisperAPI {
                     SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
                     String apiUrl = prefs.getString(KEY_API_URL, "");
                     String apiKey = prefs.getString(KEY_API_KEY, "");
+                    String transcriptionPrompt = prefs.getString(KEY_TRANSCRIPTION_PROMPT, "");
+                    String whisperModel = prefs.getString(KEY_WHISPER_MODEL, "whisper-1");
 
                     Log.d(TAG, "WhisperAPI: Full URL=" + apiUrl);
                     Log.d(TAG, "WhisperAPI: Key length=" + apiKey.length());
+                    Log.d(TAG, "WhisperAPI: Model=" + whisperModel);
 
                     if (apiUrl.isEmpty() || apiKey.isEmpty()) {
                         Log.e(TAG, "WhisperAPI: API not configured");
@@ -106,13 +111,21 @@ public class WhisperAPI {
                     request.writeBytes("--" + boundary + CRLF);
                     request.writeBytes("Content-Disposition: form-data; name=\"model\"" + CRLF);
                     request.writeBytes(CRLF);
-                    request.writeBytes("whisper-1" + CRLF);
+                    request.writeBytes(whisperModel + CRLF);
 
                     // Add response_format parameter
                     request.writeBytes("--" + boundary + CRLF);
                     request.writeBytes("Content-Disposition: form-data; name=\"response_format\"" + CRLF);
                     request.writeBytes(CRLF);
                     request.writeBytes("json" + CRLF);
+
+                    // Add prompt parameter if provided
+                    if (!transcriptionPrompt.isEmpty()) {
+                        request.writeBytes("--" + boundary + CRLF);
+                        request.writeBytes("Content-Disposition: form-data; name=\"prompt\"" + CRLF);
+                        request.writeBytes(CRLF);
+                        request.writeBytes(transcriptionPrompt + CRLF);
+                    }
 
                     // Add file
                     request.writeBytes("--" + boundary + CRLF);
